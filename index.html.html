@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumio — 당신의 화면, 다시 정직하게</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* ========== TOKENS ========== */
+  :root {
+    --bg: #FBF8F2;
+    --bg-soft: #F4EEE3;
+    --bg-card: #FFFFFF;
+    --bg-deep: #EFE7D6;
+
+    --ink: #1A2533;
+    --ink-soft: #3D4A5C;
+    --ink-muted: #7A8290;
+    --ink-faint: #B5BAC4;
+
+    --accent: #E96B47;          /* warm coral — primary accent */
+    --accent-soft: #FDEBE2;     /* soft peach — gentle background */
+    --accent-deep: #C04A28;
+
+    --sage: #3F7561;            /* trust / solution */
+    --sage-soft: #E4EFE9;
+
+    --navy: #1E3A5F;            /* serious / data */
+    --navy-soft: #E3E9F0;
+
+    --line: #E5DDC8;
+    --shadow-sm: 0 1px 2px rgba(26,37,51,0.04);
+    --shadow-md: 0 8px 24px -8px rgba(26,37,51,0.08), 0 2px 6px -2px rgba(26,37,51,0.04);
+    --shadow-lg: 0 24px 48px -12px rgba(26,37,51,0.10), 0 6px 16px -4px rgba(26,37,51,0.05);
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Gowun Dodum', sans-serif;
+    background: var(--bg);
+    color: var(--ink-soft);
+    font-size: 17px;
+    line-height: 1.75;
+    word-break: keep-all;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 32px; }
+  .wrap-narrow { max-width: 720px; margin: 0 auto; padding: 0 32px; }
+
+  /* ========== TYPOGRAPHY ========== */
+  h1, h2, h3, h4 {
+    font-family: 'Gowun Batang', serif;
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .display {
+    font-family: 'Black Han Sans', sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  /* gentle accent (replaces heavy highlights) */
+  .em { color: var(--accent-deep); font-weight: 700; }
+  .em-sage { color: var(--sage); font-weight: 700; }
+  .em-navy { color: var(--navy); font-weight: 700; }
+  .underline-soft {
+    background-image: linear-gradient(transparent 60%, var(--accent-soft) 60%);
+    padding: 0 2px;
+  }
+
+  /* ========== NAV ========== */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(251, 248, 242, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    max-width: 1080px; margin: 0 auto;
+    padding: 14px 32px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .logo {
+    font-family: 'Gowun Batang', serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .logo .dot { color: var(--accent); }
+  .nav-links { display: flex; gap: 28px; font-size: 14px; }
+  .nav-links a {
+    color: var(--ink-muted);
+    text-decoration: none;
+    font-family: 'Gowun Dodum', sans-serif;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent-deep); }
+  @media (max-width: 720px) { .nav-links { display: none; } }
+
+  /* ========== HERO ========== */
+  .hero {
+    padding: 100px 0 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -150px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, var(--sage-soft) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-inner { position: relative; z-index: 1; }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--accent-deep);
+    background: var(--accent-soft);
+    padding: 7px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+    font-weight: 600;
+  }
+  .eyebrow .pulse {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(233, 107, 71, 0.5); }
+    70% { box-shadow: 0 0 0 8px rgba(233, 107, 71, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(233, 107, 71, 0); }
+  }
+
+  .hero h1 {
+    font-family: 'Gowun Batang', serif;
+    font-size: clamp(40px, 6vw, 64px);
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+  .hero h1 .coral { color: var(--accent); }
+
+  .hero-sub {
+    font-size: 19px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    max-width: 620px;
+    margin-bottom: 36px;
+  }
+
+  .hero-meta {
+    display: flex; gap: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    max-width: 620px;
+    flex-wrap: wrap;
+  }
+  .hero-meta span strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ========== SECTION BASE ========== */
+  section { padding: 80px 0; }
+  section.alt { background: var(--bg-soft); }
+
+  .section-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--accent-deep);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .section-tag.sage { color: var(--sage); }
+  .section-tag.navy { color: var(--navy); }
+  
+  .section-title {
+    font-size: clamp(28px, 4vw, 38px);
+    line-height: 1.25;
+    margin-bottom: 18px;
+    max-width: 640px;
+  }
+  .section-lead {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--ink-soft);
+    max-width: 640px;
+    margin-bottom: 48px;
+  }
+
+  /* ========== "WHAT IS DARK PATTERN" ========== */
+  .intro-story {
+    background: var(--bg-card);
+    border-radius: 20px;
+    padding: 40px 44px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--line);
+    position: relative;
+  }
+  .intro-story::before {
+    content: '"';
+    position: absolute;
+    top: 8px; left: 24px;
+    font-family: 'Gowun Batang', serif;
+    font-size: 72px;
+    color: var(--accent-soft);
+    line-height: 1;
+    font-weight: 700;
+  }
+  .intro-story p { position: relative; }
+  .intro-story p + p { margin-top: 14px; }
+
+  .example-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .ex-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 24px 22px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .ex-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .ex-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--accent-soft);
+    display: grid; place-items: center;
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+  .ex-card h4 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 17px;
+    margin-bottom: 8px;
+  }
+  .ex-card p {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  /* ========== PROBLEM (3 issues) ========== */
+  .problem-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .problem-item {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 28px 32px;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .problem-item .num {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 40px;
+    line-height: 0.9;
+    color: var(--accent);
+  }
+  .problem-item h3 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .problem-item p {
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .problem-item .example {
+    background: var(--bg-soft);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--ink-muted);
+    font-style: italic;
+  }
+  .problem-item .example::before {
+    content: '예시 ▸ ';
+    color: var(--accent-deep);
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  /* deeper dives (A B C) */
+  .deeper {
+    margin-top: 56px;
+    padding-top: 48px;
+    border-top: 1px dashed var(--ink-faint);
+  }
+  .deeper-title {
+    font-family: 'Gowun Batang', serif;
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .deeper-sub {
+    color: var(--ink-muted);
+    font-size: 15px;
+    margin-bottom: 28px;
+  }
+  .deeper-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .deeper-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 28px 24px;
+    border: 1px solid var(--line);
+  }
+  .deeper-card .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .deeper-card h4 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 17px;
+    margin-bottom: 10px;
+    line-height: 1.35;
+  }
+  .deeper-card p {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  /* ========== SOLUTIONS (4 features) ========== */
+  .feature {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: center;
+    margin-bottom: 72px;
+  }
+  .feature:nth-child(even) .feature-text { order: 2; }
+  .feature:nth-child(even) .feature-visual { order: 1; }
+
+  .feature-text .step {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--sage);
+    margin-bottom: 18px;
+    font-weight: 600;
+  }
+  .feature-text .step .circle {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--sage);
+    color: white;
+    display: grid; place-items: center;
+    font-size: 13px;
+    font-family: 'Gowun Dodum', sans-serif;
+  }
+  .feature-text h3 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 28px;
+    line-height: 1.3;
+    margin-bottom: 14px;
+  }
+  .feature-text > p {
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+  .feature-text .tech-note {
+    background: var(--sage-soft);
+    border-left: 3px solid var(--sage);
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .feature-text .tech-note strong { color: var(--sage); font-weight: 700; }
+  .feature-text ul {
+    list-style: none;
+  }
+  .feature-text ul li {
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 12px;
+    font-size: 15.5px;
+    line-height: 1.7;
+  }
+  .feature-text ul li::before {
+    content: '✓';
+    position: absolute;
+    left: 0; top: 1px;
+    width: 20px; height: 20px;
+    background: var(--sage);
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    display: grid; place-items: center;
+    font-weight: 700;
+  }
+  .feature-text ul li strong { color: var(--ink); font-weight: 700; }
+
+  /* visual mockups */
+  .mockup {
+    background: var(--bg-card);
+    border-radius: 18px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+  }
+  .mockup-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .mockup-bar span {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--ink-faint);
+  }
+  .mockup-bar span:nth-child(1) { background: #FF6058; }
+  .mockup-bar span:nth-child(2) { background: #FFBE2E; }
+  .mockup-bar span:nth-child(3) { background: #28C840; }
+
+  /* Mockup 1: hidden cancel button */
+  .mk-cancel {
+    text-align: center;
+    padding: 12px 4px 4px;
+  }
+  .mk-cancel h5 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .mk-cancel p {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 18px;
+  }
+  .mk-btn-row { display: flex; gap: 8px; }
+  .mk-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    text-align: center;
+    font-weight: 700;
+    border: none;
+    font-family: inherit;
+  }
+  .mk-btn.primary {
+    background: var(--navy);
+    color: white;
+  }
+  .mk-btn.ghost-before {
+    background: #FAFAFA;
+    color: #DDD;
+    border: 1px solid #F0F0F0;
+  }
+  .mk-btn.ghost-after {
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    border: 2px solid var(--accent);
+    position: relative;
+  }
+  .mk-arrow {
+    text-align: center;
+    margin: 14px 0 10px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--sage);
+    letter-spacing: 0.15em;
+    font-weight: 600;
+  }
+  .mk-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-muted);
+    letter-spacing: 0.15em;
+    margin-bottom: 6px;
+  }
+
+  /* Mockup 2: Magic exit flow */
+  .mk-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px;
+  }
+  .mk-flow-step {
+    background: var(--bg-soft);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .mk-flow-step .ico {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: var(--bg-card);
+    display: grid; place-items: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .mk-flow-step.user { background: var(--accent-soft); }
+  .mk-flow-step.done { background: var(--sage-soft); border: 1.5px solid var(--sage); }
+  .mk-flow-step strong { color: var(--ink); font-weight: 700; }
+  .mk-arrow-down {
+    text-align: center;
+    color: var(--ink-faint);
+    font-size: 14px;
+    margin: -4px 0;
+  }
+
+  /* Mockup 3: Fake timer */
+  .mk-timer {
+    padding: 8px;
+  }
+  .mk-timer-before {
+    background: linear-gradient(135deg, #FFE4DC, #FFD0BF);
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+    margin-bottom: 12px;
+    border: 2px dashed var(--accent);
+  }
+  .mk-timer-before .urg {
+    font-size: 12px;
+    color: var(--accent-deep);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .mk-timer-before .countdown {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent-deep);
+  }
+  .mk-warn {
+    background: var(--bg-card);
+    border: 1.5px solid var(--sage);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink);
+    display: flex;
+    gap: 10px;
+  }
+  .mk-warn .ico {
+    color: var(--sage);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .mk-warn strong { color: var(--sage); font-weight: 700; }
+
+  /* Mockup 4: Report */
+  .mk-report {
+    padding: 4px;
+  }
+  .mk-report-head {
+    font-family: 'Gowun Batang', serif;
+    font-size: 14px;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+  .mk-report-num {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 38px;
+    line-height: 1;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .mk-report-sub {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 18px;
+  }
+  .mk-report-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px dashed var(--line);
+    font-size: 13.5px;
+  }
+  .mk-report-row span { color: var(--ink-soft); }
+  .mk-report-row strong {
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+  }
+  .mk-report-pdf {
+    margin-top: 14px;
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+  }
+
+  /* ========== DIFFERENTIATION ========== */
+  .diff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .diff-card {
+    background: var(--bg-card);
+    border-radius: 18px;
+    padding: 32px 30px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+  }
+  .diff-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--sage));
+  }
+  .diff-card .diff-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent-deep);
+    letter-spacing: 0.18em;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .diff-card h3 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 21px;
+    margin-bottom: 14px;
+    line-height: 1.3;
+  }
+  .diff-card > p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+  .diff-compare {
+    background: var(--bg-soft);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-top: 14px;
+  }
+  .diff-compare .row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 12px;
+    padding: 6px 0;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .diff-compare .row + .row { border-top: 1px dashed var(--ink-faint); }
+  .diff-compare .row .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+  }
+  .diff-compare .row.them .tag { color: var(--ink-muted); }
+  .diff-compare .row.us .tag { color: var(--accent-deep); }
+  .diff-compare .row .desc { color: var(--ink-soft); }
+  .diff-compare .row.us .desc { color: var(--ink); font-weight: 700; }
+
+  /* ========== BUSINESS MODEL ========== */
+  .biz-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .biz-card {
+    background: var(--bg-card);
+    border-radius: 18px;
+    padding: 32px 26px;
+    border: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+  }
+  .biz-card .biz-type {
+    display: inline-block;
+    align-self: flex-start;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: var(--navy-soft);
+    color: var(--navy);
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+  .biz-card h3 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 19px;
+    margin-bottom: 14px;
+    line-height: 1.35;
+  }
+  .biz-card ul { list-style: none; }
+  .biz-card ul li {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    padding: 10px 0;
+    border-top: 1px dashed var(--line);
+  }
+  .biz-card ul li:first-child { border-top: none; padding-top: 0; }
+  .biz-card ul li strong {
+    display: block;
+    color: var(--ink);
+    font-weight: 700;
+    font-family: 'Gowun Batang', serif;
+    margin-bottom: 2px;
+    font-size: 14.5px;
+  }
+  .biz-card .price {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 32px;
+    color: var(--accent);
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+
+  /* ========== IMPACT ========== */
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .impact-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 32px 26px;
+    border: 1px solid var(--line);
+    text-align: center;
+  }
+  .impact-icon {
+    width: 56px; height: 56px;
+    margin: 0 auto 18px;
+    background: var(--accent-soft);
+    border-radius: 16px;
+    display: grid; place-items: center;
+    font-size: 26px;
+  }
+  .impact-card:nth-child(2) .impact-icon { background: var(--sage-soft); }
+  .impact-card:nth-child(3) .impact-icon { background: var(--navy-soft); }
+  .impact-card h3 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .impact-card p {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  /* ========== CLOSING ========== */
+  .closing {
+    padding: 100px 0;
+    text-align: center;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--accent-soft) 100%);
+  }
+  .closing-quote {
+    font-family: 'Gowun Batang', serif;
+    font-size: clamp(28px, 4vw, 40px);
+    line-height: 1.4;
+    color: var(--ink);
+    font-weight: 700;
+    margin-bottom: 24px;
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .closing-quote .coral { color: var(--accent); }
+  .closing-sub {
+    font-size: 16px;
+    color: var(--ink-soft);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .closing-meta {
+    margin-top: 48px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 760px) {
+    body { font-size: 16px; }
+    section { padding: 56px 0; }
+    .hero { padding: 64px 0 56px; }
+    .feature, .diff-grid, .example-cards, .deeper-grid,
+    .biz-grid, .impact-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .feature:nth-child(even) .feature-text { order: initial; }
+    .feature:nth-child(even) .feature-visual { order: initial; }
+    .intro-story { padding: 28px 24px; }
+    .problem-item {
+      grid-template-columns: 1fr;
+      padding: 24px 22px;
+    }
+    .problem-item .num { font-size: 28px; margin-bottom: -8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo">Lumio<span class="dot">.</span></div>
+    <div class="nav-links">
+      <a href="#what">다크패턴이란</a>
+      <a href="#problem">문제점</a>
+      <a href="#solution">해결책</a>
+      <a href="#diff">차별점</a>
+      <a href="#business">비즈니스</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+  <div class="wrap hero-inner">
+    <span class="eyebrow"><span class="pulse"></span>AI 사용자 대리인 · Real-time UI Defender</span>
+    <h1>당신의 화면을<br>다시, <span class="coral">정직하게.</span></h1>
+    <p class="hero-sub">
+      해지 버튼이 안 보이고, "지금 1,240명이 보고 있어요!"에 마음이 흔들리고,
+      모르는 사이에 자동결제가 시작된 적 있으신가요?<br><br>
+      <strong>Lumio</strong>는 이런 '속이는 디자인(다크패턴)'을 AI가 실시간으로 막아주는 서비스입니다.
+      대신 클릭해주고, 대신 해지해주고, 진짜 가격을 알려줍니다.
+    </p>
+    <div class="hero-meta">
+      <span><strong>분야</strong> · AI / 소비자 권익</span>
+      <span><strong>형태</strong> · 브라우저 확장 + 모바일 앱</span>
+      <span><strong>시점</strong> · 2026</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ WHAT IS DARK PATTERN? ═══════════ -->
+<section id="what">
+  <div class="wrap">
+    <span class="section-tag">▸ 잠깐, 먼저</span>
+    <h2 class="section-title">다크패턴이 뭔지부터 알려드릴게요.</h2>
+    <p class="section-lead">
+      혹시 "다크패턴"이라는 말이 처음이신가요? 괜찮아요. 사실 우리 모두가 매일 당하고 있지만,
+      이름을 모르는 것뿐이에요.
+    </p>
+
+    <div class="intro-story">
+      <p>
+        <strong style="color: var(--ink); font-family: 'Gowun Batang', serif;">다크패턴</strong>은
+        한마디로 <span class="em">'사용자를 속이거나 헷갈리게 만드는 디자인 트릭'</span>이에요.
+      </p>
+      <p>
+        쉽게 비유하자면, 마트에서 일부러 출구를 안 보이게 숨겨놓고 빙빙 돌게 만들어 더 많이
+        사게 만드는 것과 비슷해요. 다만 인터넷에서는 더 교묘하죠.
+        '동의' 버튼은 크고 화려한데 '거절' 버튼은 회색으로 작게 숨겨두거나,
+        가입은 1초인데 해지는 미로를 통과해야 하는 식이에요.
+      </p>
+      <p>
+        문제는 우리가 <span class="em-sage">이런 트릭에 매번 당하고 있다는 사실조차 모른다는 것</span>입니다.
+        매일, 알게 모르게요.
+      </p>
+    </div>
+
+    <p class="section-lead" style="margin-top: 40px; margin-bottom: 24px;">
+      이런 것들이 모두 다크패턴이에요 ↓
+    </p>
+    <div class="example-cards">
+      <div class="ex-card">
+        <div class="ex-icon">🕳️</div>
+        <h4>숨겨진 해지 버튼</h4>
+        <p>해지하려고 들어갔는데, 도무지 버튼이 어디 있는지 모르겠어요. 상담원 전화, 5단계 설문, 회유 팝업...</p>
+      </div>
+      <div class="ex-card">
+        <div class="ex-icon">⏱️</div>
+        <h4>가짜 마감 임박</h4>
+        <p>"10분 안에 결제하세요!"라고 떠서 급하게 샀는데, 새로고침하면 다시 10분이 시작돼요.</p>
+      </div>
+      <div class="ex-card">
+        <div class="ex-icon">🎭</div>
+        <h4>헷갈리는 문구</h4>
+        <p>"혜택 포기하기 / 계속 받기" 중에 뭘 눌러야 해지인지 도무지 알 수가 없어요.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PROBLEM ═══════════ -->
+<section id="problem" class="alt">
+  <div class="wrap">
+    <span class="section-tag">▸ 문제 정의</span>
+    <h2 class="section-title">이게 왜 심각한 문제일까요?</h2>
+    <p class="section-lead">
+      현재의 다크패턴은 단순히 '불편한 UI'를 넘어, '디지털 가스라이팅' 수준으로 진화했습니다.
+      세 가지 방식으로 우리를 공격하고 있어요.
+    </p>
+
+    <div class="problem-list">
+      <div class="problem-item">
+        <div class="num">01</div>
+        <div>
+          <h3>인지적 과부하 유도</h3>
+          <p>
+            의도적으로 복잡한 문장(이중 부정문 등)을 써서, 사용자가 머리가 아파 결국 '동의' 버튼을
+            누르도록 유도해요. 읽기 어려운 약관, 빙빙 도는 설명이 모두 여기에 해당해요.
+          </p>
+          <div class="example">"개인정보 수집에 동의하지 않음을 거부하지 않으시겠습니까?" → 결국 동의하게 됨</div>
+        </div>
+      </div>
+
+      <div class="problem-item">
+        <div class="num">02</div>
+        <div>
+          <h3>심리적 압박</h3>
+          <p>
+            "지금 1,240명이 이 상품을 보고 있습니다", "재고 단 2개 남음" 같은 <span class="em">허위 소셜 증거</span>로
+            합리적인 판단을 방해해요. 사실 그 숫자는 그냥 자바스크립트로 랜덤 생성된 거예요.
+          </p>
+          <div class="example">"마감 임박 00:09:59" → 새로고침하면 다시 10분 시작</div>
+        </div>
+      </div>
+
+      <div class="problem-item">
+        <div class="num">03</div>
+        <div>
+          <h3>정보 비대칭의 극대화 (Roach Motel)</h3>
+          <p>
+            <span class="em">'바퀴벌레 호텔(Roach Motel)'</span>이라고 불리는 패턴이에요. 들어가긴 쉽지만 나오긴 어렵죠.
+            결제는 '원클릭'인데, 해지는 상담원 연결이나 복잡한 설문을 거쳐야 합니다.
+          </p>
+          <div class="example">가입 1초, 해지 30분 — 이 비대칭이 회사 매출의 핵심이 된 시대</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEEPER DIVES A B C -->
+    <div class="deeper">
+      <h3 class="deeper-title">더 무서운 건, 이게 '실수'가 아니라 '설계'라는 점입니다.</h3>
+      <p class="deeper-sub">왜 다크패턴은 그냥 두면 안 되는 걸까요? 세 가지 이유가 있어요.</p>
+
+      <div class="deeper-grid">
+        <div class="deeper-card">
+          <span class="badge">A</span>
+          <h4>'설계된 부주의'의 위험성</h4>
+          <p>
+            기업은 인간의 본능(Fitts's Law·시각 위계)을 악용해요. 우리 뇌는 본능적으로
+            '밝고 큰 버튼'을 긍정으로, '작고 흐린 텍스트'를 무시하도록 설계돼 있죠.
+            다크패턴은 이 <strong style="color: var(--ink);">생물학적 본능을 해킹</strong>해서
+            자유의지를 무력화시킵니다. "알고도 당하는" 구조라는 게 핵심이에요.
+          </p>
+        </div>
+        <div class="deeper-card">
+          <span class="badge">B</span>
+          <h4>'구독 경제'의 독소조항화</h4>
+          <p>
+            과거엔 한 번 잘못 사면 끝이었어요. 그런데 지금은 '구독'이 대세가 되면서,
+            <strong style="color: var(--ink);">한 번의 낚시가 평생의 자동결제</strong>로 이어집니다.
+            해지 버튼을 숨기는 건 단순 권익 침해가 아니라, 시장의 효율적 자원 배분을
+            방해하는 경제적 해악이에요.
+          </p>
+        </div>
+        <div class="deeper-card">
+          <span class="badge">C</span>
+          <h4>법적 규제 vs 기술의 속도</h4>
+          <p>
+            공정거래위원회가 규제안을 내놓아도, UI 업데이트는 매일 실시간으로 일어나요.
+            법이 바뀌면 기업은 곧바로 <strong style="color: var(--ink);">'법망을 피하는 새 디자인'</strong>을 배포합니다.
+            사후 규제(법)가 아닌 <span class="em">실시간 대응(AI)</span>만이 유일한 해결책이에요.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SOLUTION ═══════════ -->
+<section id="solution">
+  <div class="wrap">
+    <span class="section-tag sage">▸ 해결 방안</span>
+    <h2 class="section-title">그래서 Lumio는, AI로 4가지를 합니다.</h2>
+    <p class="section-lead">
+      기업이 인간의 본능을 해킹한다면, 우리는 AI로 그 해킹을 다시 해킹합니다.
+      각 기능을 하나씩 친절히 설명해드릴게요.
+    </p>
+
+    <!-- Feature 1: UI Scan -->
+    <div class="feature">
+      <div class="feature-text">
+        <div class="step"><span class="circle">1</span>실시간 UI 취약점 스캔</div>
+        <h3>화면 속 '숨겨진 함정'을 찾아내요.</h3>
+        <p>
+          페이지가 열리는 순간, AI가 화면 전체를 훑어봅니다. 텍스트의 '어조'를 분석하고,
+          버튼의 명도·채도까지 계산해요. 뭔가 이상하면 즉시 사용자에게 보여줍니다.
+        </p>
+        <div class="tech-note">
+          <strong>🔬 어떤 기술로?</strong> LLM(대형언어모델)이 문장의 '의도'를,
+          컴퓨터 비전이 버튼의 '시각적 위계'를 분석합니다. 둘이 짝을 이뤄 함정을 잡아내요.
+        </div>
+        <ul>
+          <li><strong>고스트 버튼 탐지</strong> — 배경색과 거의 같아서 안 보이는 '광고 닫기'나 '해지' 버튼을 강제로 반전시켜 또렷하게 보여줍니다.</li>
+          <li><strong>기만적 문구 번역</strong> — "혜택 포기하기"는 "유료 구독 유지하기"로, "나중에 하기"는 "지금 결제하기"로 진짜 의미를 알려줍니다.</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="mockup">
+          <div class="mockup-bar"><span></span><span></span><span></span></div>
+          <div class="mk-cancel">
+            <div class="mk-label">▸ 구독 해지 페이지</div>
+            <h5>정말 떠나시려고요? 😢</h5>
+            <p>혜택을 모두 잃게 됩니다.</p>
+            <div class="mk-btn-row">
+              <button class="mk-btn primary">계속 이용하기</button>
+              <button class="mk-btn ghost-before">해지</button>
+            </div>
+            <div class="mk-arrow">▼ AI 적용 후 ▼</div>
+            <div class="mk-btn-row">
+              <button class="mk-btn primary">계속 이용하기</button>
+              <button class="mk-btn ghost-after">해지하기 ✓</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 2: Magic Exit -->
+    <div class="feature">
+      <div class="feature-text">
+        <div class="step"><span class="circle">2</span>매직 엑싯 (Magic Exit)</div>
+        <h3>"해지해줘" 한 마디면, AI가 다 합니다.</h3>
+        <p>
+          이건 진짜 게임체인저예요. 사용자가 "이거 해지해줘"라고 명령하면,
+          AI 에이전트가 백그라운드에서 그 사이트의 구조(DOM)를 파악하고
+          <span class="em-sage">해지 페이지까지 최단 경로</span>를 스스로 탐색해요.
+        </p>
+        <div class="tech-note">
+          <strong>🤖 어떤 기술로?</strong> 사용자의 클릭을 대신 수행하는
+          <strong>Action-oriented AI(LLM Agent)</strong>가 사용됩니다. 마치 사용자 옆에 앉은
+          비서가 마우스를 대신 잡고 클릭해주는 것과 같아요.
+        </div>
+        <ul>
+          <li>수많은 <strong>'유지 권유' 팝업을 자동으로 거절</strong>합니다. "정말 떠나시겠어요?" 같은 회유에 흔들리지 않아요.</li>
+          <li>최종 <strong>'해지 확정' 버튼만 사용자에게 팝업으로 띄워줍니다</strong>. 마지막 결정만 사람이 하면 돼요.</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="mockup">
+          <div class="mockup-bar"><span></span><span></span><span></span></div>
+          <div class="mk-flow">
+            <div class="mk-flow-step user"><span class="ico">💬</span><span>"넷플릭스 해지해줘"</span></div>
+            <div class="mk-arrow-down">↓</div>
+            <div class="mk-flow-step"><span class="ico">🔍</span><span>해지 페이지 자동 탐색</span></div>
+            <div class="mk-arrow-down">↓</div>
+            <div class="mk-flow-step"><span class="ico">🛡️</span><span>5단계 설문 자동 통과</span></div>
+            <div class="mk-arrow-down">↓</div>
+            <div class="mk-flow-step"><span class="ico">❌</span><span>"잠깐만요!" 팝업 자동 거절</span></div>
+            <div class="mk-arrow-down">↓</div>
+            <div class="mk-flow-step done"><span class="ico">✓</span><strong>최종 확정만 사용자에게</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 3: Fact Checker -->
+    <div class="feature">
+      <div class="feature-text">
+        <div class="step"><span class="circle">3</span>타임라인 팩트체커</div>
+        <h3>"마감 임박"의 진실을 알려드려요.</h3>
+        <p>
+          전 세계 쇼핑몰의 가격 변동과 재고 데이터를 수집하는 크롤러와 연동돼 있어요.
+          그래서 "한정 특가"가 진짜 특가인지, 그냥 마케팅 카피인지 <span class="em">데이터로 증명</span>합니다.
+        </p>
+        <ul>
+          <li><strong>가짜 타이머 무력화</strong> — "마감 임박 00:10" 문구가 뜨면 즉시 경고: "이 타이머는 페이지를 새로고침하면 초기화되는 스크립트입니다."</li>
+          <li><strong>가격 히스토리 표시</strong> — "이 상품은 최근 3개월 최저가보다 15% 비싸요. 지금이 기회가 아닙니다." 진짜 좋은 타이밍을 알려줍니다.</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="mockup">
+          <div class="mockup-bar"><span></span><span></span><span></span></div>
+          <div class="mk-timer">
+            <div class="mk-label">▸ 쇼핑몰 상품 페이지</div>
+            <div class="mk-timer-before">
+              <div class="urg">🔥 마감 임박</div>
+              <div class="countdown">00:09:47</div>
+            </div>
+            <div class="mk-warn">
+              <span class="ico">🔍</span>
+              <div>
+                <strong>Lumio 분석</strong><br>
+                이 타이머는 새로고침 시 초기화되는 스크립트입니다.
+                현재 가격은 최근 3개월 최저가 대비 <strong>+15% 비쌈</strong>.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 4: Rights Report -->
+    <div class="feature">
+      <div class="feature-text">
+        <div class="step"><span class="circle">4</span>소비자 권리 리포트 & 법률 대리</div>
+        <h3>한 달간 얼마를 지켰는지, 보고서로 보내드려요.</h3>
+        <p>
+          AI가 막아준 결제 유도 금액을 모두 합쳐서, 매달 '세이브 리포트'로 보여드려요.
+          그리고 명백한 다크패턴은 <span class="em-sage">자동으로 신고서까지 만들어줍니다</span>.
+        </p>
+        <ul>
+          <li><strong>다크패턴 가계부</strong> — "이번 달 차단한 결제 유도: 47,800원" 같은 통계를 한눈에 볼 수 있어요.</li>
+          <li><strong>자동 신고 시스템</strong> — 공정거래위원회가 정의한 다크패턴 유형과 매칭해서, 위반 화면 캡처본이 포함된 <strong>신고용 PDF를 즉석에서 생성</strong>합니다. 클릭 한 번이면 신고 끝.</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="mockup">
+          <div class="mockup-bar"><span></span><span></span><span></span></div>
+          <div class="mk-report">
+            <div class="mk-label">▸ 2026년 5월 세이브 리포트</div>
+            <div class="mk-report-head">이번 달 지켜드린 금액</div>
+            <div class="mk-report-num">₩ 47,800</div>
+            <div class="mk-report-sub">치킨 한 마리 + 라떼 5잔 값이에요 ☕</div>
+            <div class="mk-report-row"><span>가짜 타이머 차단</span><strong>12회</strong></div>
+            <div class="mk-report-row"><span>구독 해지 대행</span><strong>2건</strong></div>
+            <div class="mk-report-row"><span>고스트 버튼 노출</span><strong>34회</strong></div>
+            <div class="mk-report-pdf">📄 공정위 신고서 PDF 생성 완료</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ DIFFERENTIATION ═══════════ -->
+<section id="diff" class="alt">
+  <div class="wrap">
+    <span class="section-tag navy">▸ 독보적 차별점</span>
+    <h2 class="section-title">기존 광고 차단기랑 뭐가 다른가요?</h2>
+    <p class="section-lead">
+      "이거 그냥 AdBlock 같은 거 아냐?"라고 생각하실 수 있어요.
+      완전히 다릅니다. 네 가지로 비교해서 보여드릴게요.
+    </p>
+
+    <div class="diff-grid">
+
+      <div class="diff-card">
+        <div class="diff-num">DIFFERENCE 01</div>
+        <h3>정적 차단 vs 동적 추론</h3>
+        <p>
+          기존 광고 차단기는 '이건 광고야'라고 미리 등록된 리스트만 가려요.
+          새로운 다크패턴은 막지 못하죠. Lumio는 <span class="em">맥락을 읽습니다</span>.
+        </p>
+        <div class="diff-compare">
+          <div class="row them">
+            <span class="tag">AD-BLOCK</span>
+            <span class="desc">알려진 광고 서버 리스트 기반으로 특정 영역만 단순히 가림</span>
+          </div>
+          <div class="row us">
+            <span class="tag">LUMIO</span>
+            <span class="desc">"이 버튼이 왜 배경색과 0.1%밖에 차이가 안 날까?" — 기만적 '의도'를 실시간 추론</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="diff-card">
+        <div class="diff-num">DIFFERENCE 02</div>
+        <h3>사용자 중심의 UI 재구성</h3>
+        <p>
+          단순히 경고만 띄우는 게 아니라, 웹페이지의 구조(DOM)를 <span class="em">사용자 친화적으로 재조립</span>합니다.
+          이건 감시를 넘어선 '대리인'으로서의 기능이에요.
+        </p>
+        <div class="diff-compare">
+          <div class="row them">
+            <span class="tag">기존 도구</span>
+            <span class="desc">"이건 다크패턴입니다" 경고만 띄움 (결국 사용자가 다 해야 함)</span>
+          </div>
+          <div class="row us">
+            <span class="tag">LUMIO</span>
+            <span class="desc">5단계 해지 설문을 건너뛰고, 서버로 직접 '해지 요청 API'를 쏘는 [Direct-Action] 버튼 생성</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="diff-card">
+        <div class="diff-num">DIFFERENCE 03</div>
+        <h3>집단 지성 '다크 데이터베이스'</h3>
+        <p>
+          한 사용자가 발견한 다크패턴은 즉시 모든 사용자가 공유합니다.
+          개인이 아닌 <span class="em-sage">'소비자 연대'의 힘</span>을 기술로 구현해요.
+        </p>
+        <div class="diff-compare">
+          <div class="row them">
+            <span class="tag">기존 도구</span>
+            <span class="desc">각자 알아서 당함. 정보 공유 없음.</span>
+          </div>
+          <div class="row us">
+            <span class="tag">LUMIO</span>
+            <span class="desc">"이 사이트는 지난 24시간 동안 1,200명의 해지 시도를 방해했습니다" — 통계 기반 강력 경고</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="diff-card">
+        <div class="diff-num">DIFFERENCE 04</div>
+        <h3>심리적 넛지 역이용</h3>
+        <p>
+          기업이 쓰는 심리학 기법을 그대로 <span class="em">역이용</span>합니다.
+          감정 마케팅에 흔들리지 않도록 논리적 방어막을 형성해드려요.
+        </p>
+        <div class="diff-compare">
+          <div class="row them">
+            <span class="tag">기업</span>
+            <span class="desc">"지금 해지하면 혜택이 사라져요!" (손실 회피 편향 자극)</span>
+          </div>
+          <div class="row us">
+            <span class="tag">LUMIO</span>
+            <span class="desc">"지금 해지하면 매달 치킨 한 마리 값을 아낄 수 있어요!" (이득 프레임으로 전환)</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ BUSINESS MODEL ═══════════ -->
+<section id="business">
+  <div class="wrap">
+    <span class="section-tag">▸ 비즈니스 모델</span>
+    <h2 class="section-title">그래서, 어떻게 돈을 버나요?</h2>
+    <p class="section-lead">
+      세 가지 축으로 안정적인 수익 구조를 설계했어요. 개인·기업·정부 각 영역에서 동시에 가치를 만듭니다.
+    </p>
+
+    <div class="biz-grid">
+
+      <div class="biz-card">
+        <span class="biz-type">B2C · 구독</span>
+        <h3>일반 사용자에게 직접</h3>
+        <div class="price">$4.99<span style="font-size: 14px; color: var(--ink-muted); font-family: 'Gowun Dodum', sans-serif;">/월</span></div>
+        <ul>
+          <li><strong>Guard Pro</strong>무제한 해지 대행 및 다크패턴 차단 기능 전체 사용</li>
+          <li><strong>환불 보장 보험</strong>AI가 미처 탐지하지 못한 기만 상술로 피해가 발생하면 협력 보험사를 통해 소액 보상</li>
+          <li><strong>성공 보수형</strong>복잡한 구독 해지 성공·과다 결제 환불 받아낸 경우 환불액의 10%를 수수료로 수취</li>
+        </ul>
+      </div>
+
+      <div class="biz-card">
+        <span class="biz-type" style="background: var(--sage-soft); color: var(--sage);">B2B · 인증</span>
+        <h3>착한 기업에 도장 찍어주기</h3>
+        <div class="price" style="color: var(--sage);">인증 라이선스</div>
+        <ul>
+          <li><strong>White-List 인증 API</strong>클린 UI를 지향하는 커머스 기업에 'Ethical AI Certified' 마크 부여 및 정기 점검 리포트 판매</li>
+          <li><strong>금융권 제휴 (B2B2C)</strong>카드사 앱 내에 '구독 관리 매니저'로 탑재. 카드사는 고객 이탈 방지, 플랫폼은 라이선스 비용 수취</li>
+        </ul>
+      </div>
+
+      <div class="biz-card">
+        <span class="biz-type" style="background: var(--navy-soft); color: var(--navy);">B2G · 데이터</span>
+        <h3>정부·연구기관에 데이터 공급</h3>
+        <div class="price" style="color: var(--navy);">DPI Index</div>
+        <ul>
+          <li><strong>Dark-Pattern Index (DPI)</strong>글로벌 기업들의 다크패턴 지수를 수치화한 데이터셋을 소비자 단체·정부 기관에 제공</li>
+          <li><strong>규제 근거 자료</strong>공정위·소비자원이 정책을 설계할 때 활용할 수 있는 실시간 통계와 트렌드 리포트 제공</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ IMPACT ═══════════ -->
+<section class="alt">
+  <div class="wrap">
+    <span class="section-tag sage">▸ 기대 효과</span>
+    <h2 class="section-title">우리 서비스가 만드는 변화.</h2>
+    <p class="section-lead">
+      개인의 작은 불편을 해결하는 것을 넘어, 사회·경제·산업 세 영역에서 의미 있는 파급효과를 만듭니다.
+    </p>
+
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="impact-icon">🤝</div>
+        <h3>사회적 측면</h3>
+        <p>
+          시니어·청소년 등 <strong style="color: var(--ink);">정보 취약계층의 디지털 격차</strong>를 해소합니다.
+          누구나 동등하게 안전한 인터넷을 누릴 수 있어요.
+        </p>
+      </div>
+      <div class="impact-card">
+        <div class="impact-icon">💰</div>
+        <h3>경제적 측면</h3>
+        <p>
+          불필요한 구독·자동결제 지출이 줄어 <strong style="color: var(--ink);">가계의 실질 가용 소득</strong>이 늘어납니다.
+          매달 새는 돈을 막아드려요.
+        </p>
+      </div>
+      <div class="impact-card">
+        <div class="impact-icon">🌱</div>
+        <h3>산업적 측면</h3>
+        <p>
+          기업이 '기만적 디자인'이 아닌 <strong style="color: var(--ink);">'제품 본연의 가치'</strong>로 경쟁하도록
+          이커머스 생태계의 선순환 구조를 만듭니다.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CLOSING ═══════════ -->
+<section class="closing">
+  <div class="wrap-narrow">
+    <p class="closing-quote">
+      기만은 <span class="coral">빛</span> 앞에서<br>무너집니다.
+    </p>
+    <p class="closing-sub">
+      Lumio는 단순한 차단 도구가 아닙니다.<br>
+      디지털 시대의 자유의지를 되찾기 위한, 모두의 권리입니다.
+    </p>
+    <div class="closing-meta">
+      LUMIO · 2026 · MADE FOR EVERYONE
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
